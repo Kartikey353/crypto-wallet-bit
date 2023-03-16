@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import polygon from "../../assets/polygon.svg";
+import ethereum from "../../assets/ethereum.svg";
 import Header from "../../components/Header";
 import { MdSend, MdOutlineCallReceived } from "react-icons/md";
 import Assets from "./components/Assets";
@@ -70,8 +71,17 @@ const Home = () => {
         </div>
       </div>
       <div className="bg-dark-600 p-3 mt-4 rounded-xl grid grid-flow-col justify-center gap-5 items-center py-6">
-        <img src={polygon} className="w-10" alt="" />
-        <p className="text-3xl">{balance} MATIC</p>
+        {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 ? (
+          <img src={ethereum} className="w-10" alt="" />
+        ) : (
+          <img src={polygon} className="w-10" alt="" />
+        )}
+
+        {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 ? (
+          <p className="text-3xl">{balance} ETHERS</p>
+        ) : (
+          <p className="text-3xl">{balance} MATIC</p>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-4 w-full mt-6">
         {data.map((val, i) => (

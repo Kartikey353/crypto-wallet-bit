@@ -30,4 +30,18 @@ export const NETWORKS = [
     chain: 80001,
     explorer: "https://mumbai.polygonscan.com",
   },
+  {
+    id: 3,
+    rpc: `https://eth-goerli.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`,
+    text: "Goerli Testnet",
+    chain: 5,
+    explorer: "https://goerli.etherscan.io/",
+  },
+  {
+    id: 4,
+    rpc: `https://eth-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`,
+    text: "Ethereum Mainnet",
+    chain: 1,
+    explorer: "https://etherscan.io/",
+  },
 ];

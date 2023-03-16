@@ -11,9 +11,7 @@ const NftsTab = () => {
   const settings = {
     apiKey: process.env.REACT_APP_ALCHEMYKEY, // Replace with your Alchemy API Key.
     network:
-      currentNetwork.chain === 137
-        ? Network.MATIC_MAINNET
-        : Network.MATIC_MUMBAI, // Replace with your network.
+      currentNetwork.chain === 5 ? Network.ETH_GOERLI : Network.MATIC_MUMBAI, // Replace with your network.
   };
 
   const alchemy = new Alchemy(settings);
@@ -34,23 +32,26 @@ const NftsTab = () => {
   }, [account?.address, currentNetwork?.chain]);
 
   return (
-    <div className="">
-      {nfts?.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto">
-          {nfts.map((asset, i) => {
-            return (
-              <React.Fragment key={i}>
-                <Nfts token={asset} />
-              </React.Fragment>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex justify-center items-center">
-          <p>Not Found</p>
-        </div>
-      )}
-    </div>
+    <>
+      <div className="">
+        {nfts?.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto">
+            {nfts.map((asset, i) => {
+              return (
+                <React.Fragment key={i}>
+                  <Nfts token={asset} />
+                </React.Fragment>
+              );
+              // console.log(asset);
+            })}
+          </div>
+        ) : (
+          <div className="flex justify-center items-center">
+            <p>Not Found</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

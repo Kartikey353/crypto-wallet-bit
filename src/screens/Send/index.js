@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // import { FiCopy } from "react-icons/fi";
 import polygon from "../../assets/polygon.svg";
+import ethereum from "../../assets/ethereum.svg";
 import Header from "../../components/Header";
 import { MdSend } from "react-icons/md";
 
@@ -13,6 +14,7 @@ import axios from "axios";
 import TransactionBlock from "./components/TransactionBlock";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { current } from "@reduxjs/toolkit";
 const Send = () => {
   const { account, currentNetwork } = useSelector((state) => state.wallet);
 
@@ -37,10 +39,9 @@ const Send = () => {
 
   const sendMatic = async () => {
     if (toAddress === account?.address) {
-      toast.error("Same wallet detected !")
-      setToAddress('')
-    }
-    else {
+      toast.error("Same wallet detected !");
+      setToAddress("");
+    } else {
       try {
         setLoading(true);
         const { tx } = await sendCurrency(toAddress, amount, account);
@@ -63,8 +64,17 @@ const Send = () => {
         <div className="mt-5 grid gap-4">
           <div className="relative mt-10">
             <div className="absolute top-1/2 gap-2 -translate-y-1/2 left-4 grid grid-flow-col justify-start  items-center">
-              <img src={polygon} className="w-6" alt="" />
-              <p className="text-xl">Matic</p>
+              {currentNetwork?.chain == 5 || currentNetwork?.chain === 1 ? (
+                <img src={ethereum} className="w-6" alt="" />
+              ) : (
+                <img src={polygon} className="w-6" alt="" />
+              )}
+
+              {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 ? (
+                <p className="text-xl">Ethers</p>
+              ) : (
+                <p className="text-xl">Matic</p>
+              )}
             </div>
             <input
               type="number"
@@ -86,8 +96,9 @@ const Send = () => {
           </div>
           <button
             onClick={sendMatic}
-            className={` ${loading ? "bg-gray-500 pointer-events-none" : "bg-primary"
-              } py-3 px-10 mt-4  rounded-xl flex justify-center  items-center max-w-max`}
+            className={` ${
+              loading ? "bg-gray-500 pointer-events-none" : "bg-primary"
+            } py-3 px-10 mt-4  rounded-xl flex justify-center  items-center max-w-max`}
           >
             <p>{loading ? "Please wait..." : " Send"}</p>
             {!loading && (

@@ -125,6 +125,7 @@ export const sendCurrency = async (toAddress, amount, wallet) => {
     return { tx: null, ok: false };
   }
   const provider = await getProvider();
+  console.log(provider);
   if (!provider) {
     toast.error("Something went wrong");
     return { tx: null, ok: false };
