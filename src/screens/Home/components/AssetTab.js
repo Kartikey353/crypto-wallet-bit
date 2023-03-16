@@ -4,9 +4,19 @@ import { BASECOVALENT } from "../../../utils";
 import { formatFromWei } from "../../../web3";
 import { useSelector } from "react-redux";
 import TokenContext from "../../../context/TokenContext";
+import TokenTable from "./tokenTable";
+import { NETWORKS } from "../../../utils";
+import { current } from "@reduxjs/toolkit";
 const AssetTab = () => {
+  const { balance } = useSelector((state) => state.wallet);
+
   const [isImportClick, setIsImportClick] = useState(false);
-  const [tokenDetails, setTokenDetails] = useState([]);
+  const [tokenDetails, setTokenDetails] = useState({
+    symbol: "",
+    balance: "",
+    decimals: "",
+  });
+  const [tokenArray, setTokenArray] = useState([]);
   const { account, currentNetwork } = useSelector((state) => state.wallet);
   const token = useContext(TokenContext);
 
@@ -18,17 +28,21 @@ const AssetTab = () => {
     });
   };
 
-  const handleChange = ({ target: { value } }) => {
-    {
-      value.length === 42 && token.setContractAddress(value);
-      return true;
+  const handleChange = async ({ target: { value } }) => {
+    if (value.length === 42) {
+      await token.setContractAddress(value);
+      const data = token.getTokenDet();
     }
+    return true;
   };
 
-  const handleCallAPI = async (e) => {
+  const handlegetTokenBal = async (e) => {
     {
-      token.contractAddress.length == 42 && (await token.callAPI());
+      token.contractAddress.length == 42 && (await token.getTokenBal());
     }
+    token.setSymbol("");
+    token.setDecimal("");
+    token.setContractAddress("");
     setIsImportClick(false);
   };
 
@@ -47,8 +61,11 @@ const AssetTab = () => {
             </thead>
             <tbody>
               <tr className="bg-gray-700 text-white">
-                <td className="border px-4 py-2">ETH</td>
-                <td className="border px-4 py-2">2.0000</td>
+                {currentNetwork?.chain == 5 || currentNetwork?.chain == 1 ? (
+                  <TokenTable symb="ETH" value={balance} />
+                ) : (
+                  <TokenTable symb="MATIC" value={balance} />
+                )}
               </tr>
             </tbody>
           </table>
@@ -68,10 +85,24 @@ const AssetTab = () => {
                 minLength={42}
                 required
               />
+              <input
+                name="symbol"
+                type="text"
+                placeholder="Symbol"
+                className="text-black p-3"
+                value={token.symbol}
+              />
+              <input
+                name="decimal"
+                type="text"
+                placeholder="Decimal"
+                className="text-black p-3"
+                value={token.decimal}
+              />
               <button
                 type="submit"
                 className="bg-blue-500 p-3 px-20"
-                onClick={handleCallAPI}
+                onClick={handlegetTokenBal}
               >
                 Submit
               </button>
