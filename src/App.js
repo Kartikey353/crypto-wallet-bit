@@ -20,7 +20,8 @@ import { useDispatch } from "react-redux";
 import { walletActions } from "./store/wallet/wallet-slice";
 import { useIndexedDB } from "react-indexed-db";
 import { STORENAME } from "./utils/dbConfig";
-import TokenData from "./context/TokenData";
+import TokenData from "./context/Token/TokenData";
+import UserState from "./context/User/UserState";
 // import { CRYPTOJSSECRET } from "./utils";
 import { AES } from "crypto-js";
 import CryptoJS from "crypto-js";
@@ -78,22 +79,24 @@ const App = () => {
 
   return (
     <>
-      <TokenData>
-        <div className=" bg-dark min-h-screen text-white">
-          <Toaster />
-          <Routes>
-            <Route index element={<Welcome />} />{" "}
-            <Route path="home" element={<Home />} />{" "}
-            <Route path="login" element={<Login />} />{" "}
-            <Route path="send" element={<Send />} />{" "}
-            <Route path="receive" element={<Receive />} />{" "}
-            <Route path="setting" element={<Setting />} />{" "}
-            <Route path="/term" element={<Term />} />{" "}
-            <Route path="/about" element={<About />} />{" "}
-            <Route path="/privacypolicy" element={<Privacy />} />{" "}
-          </Routes>{" "}
-        </div>{" "}
-      </TokenData>{" "}
+      <UserState>
+        <TokenData>
+          <div className=" bg-dark min-h-screen text-white">
+            <Toaster />
+            <Routes>
+              <Route index element={<Welcome />} />{" "}
+              <Route path="home" element={<Home />} />{" "}
+              <Route path="login" element={<Login />} />{" "}
+              <Route path="send" element={<Send />} />{" "}
+              <Route path="receive" element={<Receive />} />{" "}
+              <Route path="setting" element={<Setting />} />{" "}
+              <Route path="/term" element={<Term />} />{" "}
+              <Route path="/about" element={<About />} />{" "}
+              <Route path="/privacypolicy" element={<Privacy />} />{" "}
+            </Routes>{" "}
+          </div>{" "}
+        </TokenData>{" "}
+      </UserState>{" "}
     </>
   );
 };
