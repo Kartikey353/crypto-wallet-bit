@@ -20,28 +20,34 @@ const UserState = (props) => {
     };
     getSignerAddr();
   }, [signerAddr]);
+
   const getCall = async () => {
-    // const provider = new ethers.providers.JsonRpcProvider(
-    //   `https://eth-goerli.g.alchemy.com/v2/L8dQ1bw-HR1holdrgdul1NE1OQ2K8raS`
-    // );
     const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:3000"
+      "https://eth-goerli.g.alchemy.com/v2/L8dQ1bw-HR1holdrgdul1NE1OQ2K8raS"
     );
-    const signer = provider.getSigner();
-    // const addr = await signer.getAddress();
-    console.log(provider);
-    // const signer = provider.getSigner();
-    console.log(signer);
+    //Get the pvt key
+    const pvtKey =
+      "0x1ff779889908779bec0ff3936b6151a4232e451724bbc2a3e6ac50ea771b5501";
+    //Wrap both the things in the wallet instance and then proceed
+    const wallet = new ethers.Wallet(pvtKey, provider);
+    const signer = await wallet.provider.getSigner();
+    setCurrentSigner(signer);
+    const addr = await wallet.getAddress();
+    setSignerAddr(addr);
   };
 
   useEffect(() => {
-    const getSigner = () => {
+    const getSigner = async () => {
       const provider = new ethers.providers.JsonRpcProvider(
         `https://eth-goerli.g.alchemy.com/v2/L8dQ1bw-HR1holdrgdul1NE1OQ2K8raS`
       );
       const signer = provider.getSigner();
-      setCurrentSigner(signer);
+      console.log(provider);
+      console.log(signer);
+      console.log(signerAddr);
+      // setCurrentSigner(signer);
     };
+
     getSigner();
   }, [signerAddr]);
 

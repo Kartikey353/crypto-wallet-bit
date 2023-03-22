@@ -130,20 +130,14 @@ const TokenData = (props) => {
 
   const getEventVal = async () => {
     const contract = new ethers.Contract(
-      contractAddress,
+      "0x52fC46FE52e68D7afcC9490bDD7c823e3449BD3a",
       ercABI,
       user.currentSigner
     );
 
     try {
-      // const balChange = await contract.on("Transfer", (from, to, value) => {
-      //   console.log(`Sender:${from}, Recipient:${to}, Balance:${value}`);
-      //   setUserBal(value);
-      // });
-      // console.log(balChange);
-      const owner = await contract.decimals();
-      console.log(owner);
-      // console.log(contractAddress);
+      const symb = await contract.symbol();
+      console.log(symb);
     } catch (error) {
       console.log(`Error :${error}`);
     }

@@ -9,6 +9,7 @@ import TokenTable from "./tokenTable";
 import { NETWORKS } from "../../../utils";
 import { current } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
+
 const AssetTab = () => {
   const { balance } = useSelector((state) => state.wallet);
 
@@ -42,7 +43,7 @@ const AssetTab = () => {
         ...prev,
         {
           symbol: token.symbol,
-          balance: token.userBal,
+          balance: token.userBal / 10 ** 18,
           decimal: token.decimal,
         },
       ];
@@ -53,9 +54,12 @@ const AssetTab = () => {
     setIsImportClick(false);
   };
   const handleEvent = async () => {
+    // await user.getCall();
+    await token.getEventVal();
+  };
+  const handleSigner = async () => {
     await user.getCall();
   };
-
   return (
     <>
       <div className="flex items-center flex-col">
@@ -132,6 +136,13 @@ const AssetTab = () => {
                 onClick={handleEvent}
               >
                 Get Event
+              </button>{" "}
+              <button
+                type="submit"
+                className="bg-blue-500 p-3 px-20  rounded-xl"
+                onClick={handleSigner}
+              >
+                Get Signer
               </button>{" "}
             </div>{" "}
             <button
