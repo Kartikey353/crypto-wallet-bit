@@ -95,8 +95,71 @@ const AssetTab = () => {
         </div>
         <p> Don 't see your tokens?</p>{" "}
         {isImportClick ? (
-          <div className="inpCont flex p-3">
-            <div className="inpField flex items-center flex-col border border-white p-3">
+          <div className="inpCont p-3 absolute z-10 top-0 w-full h-[100vh] bg-black">
+            <div className="flex justify-between">
+              <div className="head text-2xl font-bold">
+                Import Tokens
+              </div>
+              <button
+                type="button"
+                onClick={handleImportClick}
+                className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+              >
+                X
+              </button>
+            </div>
+            <div className="form mt-10">
+              <div className="mb-6">
+                <label
+                  htmlFor="base-input"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Contract Address
+                </label>
+                <input
+                  id="ContractAddress"
+                  name="address"
+                  type="text"
+                  onChange={handleChange}
+                  maxLength={42}
+                  minLength={42}
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="base-input"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Symbol
+                </label>
+                <input
+                  name="symbol"
+                  type="text"
+                  value={token.symbol}
+                  onChange={(e) => token.setSymbol(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="base-input"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  decimal
+                </label>
+                <input
+                  name="decimal"
+                  type="text"
+                  value={token.decimal}
+                  onChange={(e) => token.setDecimal(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+            </div>
+            {/* <h1 className="">Import Tokens</h1>
+            <div className="inpField flex items-center flex-col border border-white w-full p-3">
               <input
                 name="address"
                 type="text"
@@ -151,6 +214,14 @@ const AssetTab = () => {
             >
               X{" "}
             </button>{" "}
+          </div> */}
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            >
+              Submit
+            </button>
           </div>
         ) : (
           <button onClick={handleImportClick} className="text-sky-500">
