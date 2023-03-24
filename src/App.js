@@ -66,7 +66,9 @@ const App = () => {
           wallet.wallet,
           process.env.REACT_APP_CRYPTOJSSECRET
         );
+        console.log(`bytes:${bytes}`);
         const originalWallet = bytes.toString(CryptoJS.enc.Utf8);
+        console.log(`Original Wallet ${originalWallet}`);
         dispatch(walletActions.setAccount(JSON.parse(originalWallet)));
       } catch (error) {
         console.log(error);
