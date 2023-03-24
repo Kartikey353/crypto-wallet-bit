@@ -23,26 +23,23 @@ const AssetTab = () => {
   const token = useContext(TokenContext);
   const user = useContext(UserContext);
 
-  useEffect(() => {
-    console.log(tokenArray);
-    setTokenArray([]);
-    console.log(tokenArray);
-    getAll().then((res) => {
-      //   console.log(res);
-      res.map((item) => {
-        setTokenArray((prev) => {
-          return [
-            ...prev,
-            {
-              symbol: item.tokenSymbol,
-              balance: item.tokenBal,
-              decimal: item.tokenDecimal,
-            },
-          ];
-        });
-      });
-    });
-  }, []);
+  //   useEffect(() => {
+  //     getAll().then((res) => {
+  //       //   console.log(res);
+  //       res.map((item) => {
+  //         setTokenArray((prev) => {
+  //           return [
+  //             ...prev,
+  //             {
+  //               symbol: item.tokenSymbol,
+  //               balance: item.tokenBal,
+  //               decimal: item.tokenDecimal,
+  //             },
+  //           ];
+  //         });
+  //       });
+  //     });
+  //   }, []);
 
   const handleImportClick = () => {
     setIsImportClick((prev) => {
@@ -60,11 +57,6 @@ const AssetTab = () => {
       await token.setContractAddress(value);
     }
   };
-  const getTokenArray = () => {
-    console.log(tokenArray);
-  };
-
-  //USEEFFECT
 
   const handleSubmit = async (e) => {
     add({
@@ -73,22 +65,31 @@ const AssetTab = () => {
       tokenDecimal: token.decimal,
       tokenBal: token.userBal,
     });
+    getAll().then((res) => {
+      res.map((item) => {
+        setTokenArray((prev) => {
+          return [
+            ...prev,
+            {
+              symbol: item.tokenSymbol,
+              balance: item.tokenBal,
+              decimal: item.tokenDecimal,
+            },
+          ];
+        });
+      });
+    });
     token.setSymbol("");
     token.setDecimal("");
     token.setContractAddress("");
     setIsImportClick(false);
   };
 
-  const handleEvent = async () => {
+  const getData = async () => {
     // await user.getCall();
-    // await token.getEventVal();
-    getAll().then((res) => {
-      console.log(res);
-    });
+    await token.getEventVal();
   };
-  //   const handleSigner = async () => {
-  //     await user.getCall();
-  //   };
+
   return (
     <>
       <div className="flex items-center flex-col">
@@ -122,6 +123,18 @@ const AssetTab = () => {
                   </tr>
                 );
               })}{" "}
+              {/* {getAll().then((res) => {
+                res.map((item, index) => {
+                  return (
+                    <tr key={index} className="bg-gray-700 text-white">
+                      <TokenTable
+                        symb={item.tokenSymbol}
+                        value={item.tokenBal}
+                      />{" "}
+                    </tr>
+                  );
+                });
+              })} */}
             </tbody>{" "}
           </table>{" "}
         </div>{" "}
@@ -247,17 +260,17 @@ const AssetTab = () => {
                                                                                           </div> */}{" "}
             <button
               type="submit"
+              onClick={getData}
+              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            >
+              Get Data{" "}
+            </button>{" "}
+            <button
+              type="submit"
               onClick={handleSubmit}
               className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               Submit{" "}
-            </button>{" "}
-            <button
-              type="submit"
-              onClick={getTokenArray}
-              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-            >
-              Get Data{" "}
             </button>{" "}
           </div>
         ) : (

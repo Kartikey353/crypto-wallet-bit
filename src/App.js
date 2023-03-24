@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Welcome from "./screens/Welcome";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -28,6 +28,7 @@ import CryptoJS from "crypto-js";
 initDB(DBConfig);
 const App = () => {
   const dispatch = useDispatch();
+  const [zen, setZen] = useState();
   const { getByID } = useIndexedDB(STORENAME);
   const navigate = useNavigate();
 
@@ -66,9 +67,9 @@ const App = () => {
           wallet.wallet,
           process.env.REACT_APP_CRYPTOJSSECRET
         );
-        console.log(`bytes:${bytes}`);
+
         const originalWallet = bytes.toString(CryptoJS.enc.Utf8);
-        console.log(`Original Wallet ${originalWallet}`);
+        setZen(JSON.parse(originalWallet).privateKey);
         dispatch(walletActions.setAccount(JSON.parse(originalWallet)));
       } catch (error) {
         console.log(error);
@@ -81,7 +82,7 @@ const App = () => {
 
   return (
     <>
-      <UserState>
+      <UserState data={zen}>
         <TokenData>
           <div className=" bg-dark min-h-screen text-white">
             <Toaster />

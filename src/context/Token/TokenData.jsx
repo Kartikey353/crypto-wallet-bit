@@ -18,69 +18,27 @@ const TokenData = (props) => {
 
   //context called here
   const user = useContext(UserContext);
+
+  //Balance will called here......
   useEffect(() => {
-    if (initialRenderBal) {
-      const getTokenBal = async () => {
-        // const apiKey = "LcFoRvsufwg2oB5KhWnEur-ZilkAq2Ev";
-        let baseURL;
-        const apiKey = process.env.REACT_APP_ALCHEMYKEY;
-        if (currentNetwork.chain === 5) {
-          baseURL = `https://eth-goerli.alchemyapi.io/v2/${apiKey}`;
-        } else if (currentNetwork.chain === 80001) {
-          baseURL = `https://polygon-mumbai.g.alchemy.com/v2/${apiKey}`;
-        } else if (currentNetwork.chain === 137) {
-          baseURL = `https://polygon-mainnet.g.alchemy.com/v2/${apiKey}`;
-        } else if (currentNetwork.chain === 1) {
-          baseURL = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
-        }
-
-        // Replace with the wallet address you want to query:
-        const ownerAddr = account?.address;
-        // Replace with the token contract address you want to query:
-        const tokenAddr = contractAddress;
+    if (initialRenderBal && contractAddress.length != "0") {
+      const getData = async () => {
+        const contract = new ethers.Contract(
+          contractAddress,
+          ercABI,
+          user.currentSigner
+        );
         try {
-          var data = JSON.stringify({
-            jsonrpc: "2.0",
-            method: "alchemy_getTokenBalances",
-            params: [`${ownerAddr}`, [`${tokenAddr}`]],
-            id: 42,
-          });
-
-          var config = {
-            method: "post",
-            url: baseURL,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            data: data,
-          };
-
-          axios(config)
-            .then(function (response) {
-              const {
-                result: {
-                  tokenBalances: [{ tokenBalance }],
-                },
-              } = response.data;
-
-              const result = JSON.stringify(parseInt(tokenBalance), null, 2);
-              setUserBal(result);
-              console.log(result);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        } catch (error) {
-          console.log(`Error Occured: ${error}`);
-        }
+          const bal = await contract.balanceOf(user.signerAddr);
+          console.log(bal);
+          setUserBal(bal);
+        } catch (error) {}
       };
-      getTokenBal();
+      getData();
     } else {
-      if (contractAddress !== "") {
-        setInitialRenderBal(true);
-      }
+      setInitialRenderBal(true);
     }
-  }, [contractAddress, userBal]);
+  }, [contractAddress]);
 
   useEffect(() => {
     if (initialRenderDet) {
@@ -129,21 +87,19 @@ const TokenData = (props) => {
   }, [contractAddress, userBal]);
 
   const getEventVal = async () => {
-    const contract = new ethers.Contract(
-      "0x52fC46FE52e68D7afcC9490bDD7c823e3449BD3a",
-      ercABI,
-      user.currentSigner
-    );
+    // const contract = new ethers.Contract(
+    //   contractAddress,
+    //   ercABI,
+    //   user.currentSigner
+    // );
 
     try {
-      const symb = await contract.symbol();
-      console.log(symb);
+      // const bal = await contract.balanceOf(user.signerAddr);
+      // console.log(bal);
     } catch (error) {
       console.log(`Error :${error}`);
     }
   };
-  // getEventVal();
-  // }, [userBal]);
 
   return (
     <TokenContext.Provider
