@@ -69,7 +69,8 @@ const TokenData = (props) => {
               console.log(result);
             })
             .catch(function (error) {
-              console.log(error);
+              console.log(error.message);
+              console.log(error.response.data);
             });
         } catch (error) {
           console.log(`Error Occured: ${error}`);

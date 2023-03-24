@@ -1,4 +1,5 @@
 export const STORENAME = "accounts";
+export const TOKENSTORE = "token";
 export const DBConfig = {
   name: "Bitwallet",
   version: 1,
@@ -16,7 +17,33 @@ export const DBConfig = {
         {
           name: "active",
           keypath: "active",
-          options: { unique: false},
+          options: { unique: false },
+        },
+      ],
+    },
+    {
+      store: TOKENSTORE,
+      storeConfig: { keyPath: "id", autoIncrement: true },
+      storeSchema: [
+        {
+          name: "tokenAddress",
+          keypath: "tokenAddress",
+          options: { unique: false },
+        },
+        {
+          name: "tokenSymbol",
+          keypath: "tokenSymbol",
+          options: { unique: false },
+        },
+        {
+          name: "tokenDecimal",
+          keypath: "tokenDecimal",
+          options: { unique: false },
+        },
+        {
+          name: "tokenBal",
+          keypath: "tokenBal",
+          options: { unique: false },
         },
       ],
     },

@@ -53,8 +53,9 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, currentNetwork]);
 
+
   return (
-    <div className="relative container py-10 ">
+    <div className="relative container py-10">
       <Header />
       <div className="rounded-lg flex bg-dark-600 p-3 justify-between items-center mt-8">
         <p>Account 1</p>

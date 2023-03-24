@@ -1,5 +1,4 @@
 import toast from "react-hot-toast";
-
 export const PROVIDER = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
 export const copyToClipBoard = async (copyMe) => {

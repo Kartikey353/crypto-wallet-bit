@@ -36,20 +36,20 @@ const UserState = (props) => {
     setSignerAddr(addr);
   };
 
-  useEffect(() => {
-    const getSigner = async () => {
-      const provider = new ethers.providers.JsonRpcProvider(
-        `https://eth-goerli.g.alchemy.com/v2/L8dQ1bw-HR1holdrgdul1NE1OQ2K8raS`
-      );
-      const signer = provider.getSigner();
-      console.log(provider);
-      console.log(signer);
-      console.log(signerAddr);
-      // setCurrentSigner(signer);
-    };
+  // useEffect(() => {
+  //   const getSigner = async () => {
+  //     const provider = new ethers.providers.JsonRpcProvider(
+  //       `https://eth-goerli.g.alchemy.com/v2/L8dQ1bw-HR1holdrgdul1NE1OQ2K8raS`
+  //     );
+  //     const signer = provider.getSigner();
+  //     console.log(provider);
+  //     console.log(signer);
+  //     console.log(signerAddr);
+  //     // setCurrentSigner(signer);
+  //   };
 
-    getSigner();
-  }, [signerAddr]);
+  //   getSigner();
+  // }, [signerAddr]);
 
   return (
     <>
