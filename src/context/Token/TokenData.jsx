@@ -33,6 +33,7 @@ const TokenData = (props) => {
         } else if (currentNetwork.chain === 1) {
           baseURL = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
         }
+  
 
         // Replace with the wallet address you want to query:
         const ownerAddr = account?.address;
@@ -105,6 +106,11 @@ const TokenData = (props) => {
           settings = {
             apiKey: process.env.REACT_APP_ALCHEMYKEY,
             network: Network.MATIC_MAINNET, // Replace with your network.
+          };
+        }else if (currentNetwork.chain === 10) {
+          settings = {
+            apiKey: process.env.REACT_APP_ALCHEMYKEY,
+            network: Network.OPT_MAINNET, // Replace with your network.
           };
         }
         const alchemy = new Alchemy(settings);

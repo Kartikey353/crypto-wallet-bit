@@ -76,7 +76,7 @@ const AssetTab = () => {
             </thead>
             <tbody className="">
               <tr className="bg-gray-700 text-white">
-                {currentNetwork.chain === 5 || currentNetwork.chain == 1 ? (
+                {currentNetwork.chain === 5 || currentNetwork.chain == 1 || currentNetwork.chain == 10? (
                   <TokenTable symb="ETH" value={balance} />
                 ) : (
                   <TokenTable symb="MATIC" value={balance} />

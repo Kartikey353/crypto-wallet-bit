@@ -71,13 +71,13 @@ const Home = () => {
         </div>
       </div>
       <div className="bg-dark-600 p-3 mt-4 rounded-xl grid grid-flow-col justify-center gap-5 items-center py-6">
-        {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 ? (
+        {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 ||currentNetwork?.chain===10 ? (
           <img src={ethereum} className="w-10" alt="" />
         ) : (
           <img src={polygon} className="w-10" alt="" />
         )}
 
-        {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 ? (
+        {currentNetwork?.chain === 5 || currentNetwork?.chain === 1 || currentNetwork?.chain===10 ? (
           <p className="text-3xl">{balance} ETHERS</p>
         ) : (
           <p className="text-3xl">{balance} MATIC</p>
