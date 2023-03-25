@@ -230,10 +230,7 @@ export const transferNft = async (nftAddress, tokenId, toAddress, wallet) => {
     const tx = await nftContract["safeTransferFrom(address,address,uint256)"](
       wallet.address,
       toAddress,
-      tokenId,
-      {
-        gasLimit: "3000000000",
-      }
+      tokenId
     );
     //Wait for the transaction to complete
     // await transaction.wait();

@@ -11,61 +11,26 @@ import { current } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 import { TOKENSTORE } from "../../../utils/dbConfig";
 import { useIndexedDB } from "react-indexed-db";
+import ercABI from "../../../utils/common";
+
 const AssetTab = () => {
-  const { add, getAll, getById } = useIndexedDB(TOKENSTORE);
-
   const { balance } = useSelector((state) => state.wallet);
-
   const [isImportClick, setIsImportClick] = useState(false);
-
+  const [updateChange, setUpdateChange] = useState(false);
   const [tokenArray, setTokenArray] = useState([]);
+  // const [store, setStore] = useState();
   const { account, currentNetwork } = useSelector((state) => state.wallet);
+
+  //Make another useState for update
+
   const token = useContext(TokenContext);
   const user = useContext(UserContext);
+  const { getById, update, getAll, add, openCursor, clear } =
+    useIndexedDB(TOKENSTORE);
 
-  //   useEffect(() => {
-  //     getAll().then((res) => {
-  //       //   console.log(res);
-  //       res.map((item) => {
-  //         setTokenArray((prev) => {
-  //           return [
-  //             ...prev,
-  //             {
-  //               symbol: item.tokenSymbol,
-  //               balance: item.tokenBal,
-  //               decimal: item.tokenDecimal,
-  //             },
-  //           ];
-  //         });
-  //       });
-  //     });
-  //   }, []);
-
-  const handleImportClick = () => {
-    setIsImportClick((prev) => {
-      {
-        token.setContractAddress("");
-        token.setSymbol("");
-        token.setDecimal("");
-        return !prev;
-      }
-    });
-  };
-
-  const handleChange = async ({ target: { value } }) => {
-    if (value.length === 42) {
-      await token.setContractAddress(value);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    add({
-      tokenAddress: token.contractAddress,
-      tokenSymbol: token.symbol,
-      tokenDecimal: token.decimal,
-      tokenBal: token.userBal,
-    });
+  useEffect(() => {
     getAll().then((res) => {
+      setTokenArray([]);
       res.map((item) => {
         setTokenArray((prev) => {
           return [
@@ -79,15 +44,95 @@ const AssetTab = () => {
         });
       });
     });
-    token.setSymbol("");
-    token.setDecimal("");
-    token.setContractAddress("");
-    setIsImportClick(false);
+  }, [isImportClick, updateChange]);
+
+  const handleImportClick = () => {
+    setIsImportClick((prev) => {
+      {
+        token.setContractAddress("");
+        token.setSymbol("");
+        token.setDecimal("");
+        return !prev;
+      }
+    });
   };
 
-  const getData = async () => {
-    // await user.getCall();
-    await token.getEventVal();
+  const handleChange = async ({ target: { value } }) => {
+    const res = await getAll();
+    res.map(async (item) => {
+      value.length === 42
+        ? console.log("Already added")
+        : value === item.tokenAddress
+        ? await token.setContractAddress(value)
+        : console.log("Invalid contractAddress");
+
+      if (value.length === 42) {
+      }
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    if (token.contractAddress.length === 42) {
+      add({
+        tokenAddress: token.contractAddress,
+        tokenSymbol: token.symbol,
+        tokenDecimal: token.decimal,
+        tokenBal: token.userBal,
+      });
+      token.setSymbol("");
+      token.setDecimal("");
+      token.setContractAddress("");
+      setIsImportClick(false);
+    } else {
+      console.log("Invalid Contract Address");
+    }
+  };
+
+  let store; //variable to store data
+  const handleUpdate = async () => {
+    const res = await getAll();
+    store = res;
+    try {
+      const clearDB = await clear();
+      store.map(async (item) => {
+        // console.log(item);
+        const contract = new ethers.Contract(
+          item.tokenAddress,
+          ercABI,
+          user.currentSigner
+        );
+        try {
+          const tokenBalHex = await contract.balanceOf(user.signerAddr);
+          const balNum = Number(tokenBalHex) / 10 ** 18;
+          try {
+            item.tokenBal = balNum;
+            try {
+              add({
+                tokenAddress: item.tokenAddress,
+                tokenSymbol: item.tokenSymbol,
+                tokenDecimal: item.tokenDecimal,
+                tokenBal: item.tokenBal,
+              });
+            } catch (error) {
+              console.log(`Error occured when storing in DB:${error}`);
+            }
+          } catch (error) {
+            console.log(`Got error in assigning the value:${error}`);
+          }
+        } catch (error) {
+          console.log(`Error occured:${error}`);
+        }
+      });
+    } catch (error) {
+      console.log(`Error occured:${error}`);
+    }
+    // setUpdateChange((prev) => {
+    //   return !prev;
+    // });
+  };
+  const handleEvent = async () => {
+    const data = await getAll();
+    console.log(data);
   };
 
   return (
@@ -123,18 +168,6 @@ const AssetTab = () => {
                   </tr>
                 );
               })}{" "}
-              {/* {getAll().then((res) => {
-                res.map((item, index) => {
-                  return (
-                    <tr key={index} className="bg-gray-700 text-white">
-                      <TokenTable
-                        symb={item.tokenSymbol}
-                        value={item.tokenBal}
-                      />{" "}
-                    </tr>
-                  );
-                });
-              })} */}
             </tbody>{" "}
           </table>{" "}
         </div>{" "}
@@ -201,66 +234,15 @@ const AssetTab = () => {
                 />
               </div>{" "}
             </div>{" "}
-            {/* <h1 className="">Import Tokens</h1>
-                                                                                            <div className="inpField flex items-center flex-col border border-white w-full p-3">
-                                                                                              <input
-                                                                                                name="address"
-                                                                                                type="text"
-                                                                                                placeholder="Contract Address"
-                                                                                                className="text-black p-3 rounded-xl mb-3"
-                                                                                                onChange={handleChange}
-                                                                                                maxLength={42}
-                                                                                                minLength={42}
-                                                                                                required
-                                                                                              />
-                                                                                              <input
-                                                                                                name="symbol"
-                                                                                                type="text"
-                                                                                                placeholder="Symbol"
-                                                                                                className="text-black p-3 rounded-xl mb-3"
-                                                                                                value={token.symbol}
-                                                                                                onChange={(e) => token.setSymbol(e.target.value)}
-                                                                                              />{" "}
-                                                                                              <input
-                                                                                                name="decimal"
-                                                                                                type="text"
-                                                                                                placeholder="Decimal"
-                                                                                                className="text-black p-3 rounded-xl mb-3"
-                                                                                                value={token.decimal}
-                                                                                                onChange={(e) => token.setDecimal(e.target.value)}
-                                                                                              />{" "}
-                                                                                              <button
-                                                                                                type="submit"
-                                                                                                className="bg-blue-500 p-3 px-20  rounded-xl"
-                                                                                                onClick={handleSubmit}
-                                                                                              >
-                                                                                                Submit{" "}
-                                                                                              </button>{" "}
-                                                                                              <button
-                                                                                                type="submit"
-                                                                                                className="bg-blue-500 p-3 px-20  rounded-xl"
-                                                                                                onClick={handleEvent}
-                                                                                              >
-                                                                                                Get Event
-                                                                                              </button>{" "}
-                                                                                              <button
-                                                                                                type="submit"
-                                                                                                className="bg-blue-500 p-3 px-20  rounded-xl"
-                                                                                                onClick={handleSigner}
-                                                                                              >
-                                                                                                Get Signer
-                                                                                              </button>{" "}
-                                                                                            </div>{" "}
-                                                                                            <button
-                                                                                              className="border border-white p-2 w-fit h-fit text-red-600 font-extrabold"
-                                                                                              onClick={handleImportClick}
-                                                                                            >
-                                                                                              X{" "}
-                                                                                            </button>{" "}
-                                                                                          </div> */}{" "}
             <button
               type="submit"
-              onClick={getData}
+              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            >
+              Submit{" "}
+            </button>{" "}
+            <button
+              type="submit"
+              onClick={handleEvent}
               className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               Get Data{" "}
@@ -274,9 +256,15 @@ const AssetTab = () => {
             </button>{" "}
           </div>
         ) : (
-          <button onClick={handleImportClick} className="text-sky-500">
-            Import Tokens{" "}
-          </button>
+          <>
+            <button onClick={handleImportClick} className="text-sky-500">
+              Import Tokens{" "}
+            </button>
+            <p>OR</p>
+            <button onClick={handleUpdate} className="text-sky-500">
+              Refresh Token List{" "}
+            </button>
+          </>
         )}{" "}
       </div>{" "}
     </>

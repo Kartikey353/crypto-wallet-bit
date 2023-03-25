@@ -67,9 +67,9 @@ const App = () => {
           wallet.wallet,
           process.env.REACT_APP_CRYPTOJSSECRET
         );
-
         const originalWallet = bytes.toString(CryptoJS.enc.Utf8);
-        setZen(JSON.parse(originalWallet).privateKey);
+        const data = JSON.parse(originalWallet);
+        setZen(data.privateKey);
         dispatch(walletActions.setAccount(JSON.parse(originalWallet)));
       } catch (error) {
         console.log(error);
