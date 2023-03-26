@@ -19,10 +19,8 @@ const TokenData = (props) => {
   const [initialRenderDet, setInitialRenderDet] = useState(false);
   const [initialRenderBal, setInitialRenderBal] = useState(false);
   const [initialRenderUpdate, setInitialRenderUpdate] = useState(false);
-
-  // const [onclick, setOnclick] = useState(false);
-  const [eventListeners, setEventListeners] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [isLoader, setIsLoader] = useState(false);
 
   //context called here
   const user = useContext(UserContext);
@@ -41,56 +39,17 @@ const TokenData = (props) => {
           const balData = await contract.balanceOf(user.signerAddr);
           const bal = balData.toString() / 10 ** 18;
           setUserBal(bal);
-          console.log(bal);
+          // console.log(bal);
+          setIsLoader(false);
         } catch (error) {
           console.log(`Error occured ${error}`);
         }
       };
       getData();
-    }
-    //Code to subscribe to the event and get updated the userBal whenever wallet get recieved tokens and console the event data
-    else {
+    } else {
       setInitialRenderBal(true);
     }
   }, [contractAddress]);
-
-  //Code to update the token balance by subscribing to events
-  // useEffect(() => {
-  //   if (initialRenderUpdate) {
-  //     const getEvent = () => {
-  //       getAll().then((res) => {
-  //         for (let i = 0; i < res.length; i++) {
-  //           const contract = new ethers.Contract(
-  //             res[i].tokenAddress,
-  //             ercABI,
-  //             user.currentSigner
-  //           );
-  //           try {
-  //             contract.on("Transfer", (from, to, value, event) => {
-  //               if (res[i].tokenAddress == event.address) {
-  //                 const bal = event.args.value.toString();
-  //                 console.log(bal);
-  //               }
-  //             });
-  //           } catch (error) {
-  //             console.log(`Error occured ${error}`);
-  //           }
-  //         }
-  //       });
-  //     };
-  //     getEvent();
-  //   } else {
-  //     setInitialRenderUpdate(true);
-  //   }
-  // }, [onclick]);
-
-  //NEW CODE working
-
-  const getEvent = async () => {
-    getAll().then((res) => {
-      console.log(res);
-    });
-  };
 
   //Token Metadata
   useEffect(() => {
@@ -129,7 +88,7 @@ const TokenData = (props) => {
           alchemy.core.getTokenMetadata(tokenAddress).then((res) => {
             setSymbol(res.symbol);
             setDecimal(res.decimals);
-            console.log(res);
+            // console.log(res);
           });
         } catch (error) {
           console.log(`Error occured:${error}`);
@@ -144,23 +103,6 @@ const TokenData = (props) => {
     }
   }, [contractAddress]);
 
-  const getEventVal = async () => {
-    // const contract = new ethers.Contract(
-    //   contractAddress,
-    //   ercABI,
-    //   user.currentSigner
-    // );
-
-    try {
-      // const bal = await contract.balanceOf(user.signerAddr);
-      // console.log(bal);
-      // await user.getCall();
-      console.log(balance);
-    } catch (error) {
-      console.log(`Error :${error}`);
-    }
-  };
-
   return (
     <TokenContext.Provider
       value={{
@@ -171,9 +113,9 @@ const TokenData = (props) => {
         setSymbol,
         setDecimal,
         userBal,
-        getEventVal,
-        getEvent,
         balance,
+        isLoader,
+        setIsLoader,
       }}
     >
       {props.children}

@@ -1,6 +1,9 @@
 import React from "react";
 
 const TokenTable = (props) => {
+  const handleSendClick = () => {
+    console.log(props.tokenAddress);
+  };
   return (
     <>
       {" "}
@@ -12,6 +15,15 @@ const TokenTable = (props) => {
         {" "}
         {props.value}{" "}
       </td>{" "}
+      <button
+        className="bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl"
+        onClick={() => {
+          props.sendAction(props.tokenAddress, props.symb, props.decimals);
+        }}
+      >
+        {" "}
+        Send Asset{" "}
+      </button>{" "}
     </>
   );
 };

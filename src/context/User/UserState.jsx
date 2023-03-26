@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from "react";
 import UserContext from "./UserContext";
 import { ethers } from "ethers";
+import { useSelector } from "react-redux";
 const UserState = (props) => {
+  const { account, currentNetwork } = useSelector((state) => state.wallet);
   const [signerAddr, setSignerAddr] = useState();
   const [currentSigner, setCurrentSigner] = useState();
 
   useEffect(() => {
+    let provider;
     const getCall = async () => {
-      const provider = new ethers.providers.JsonRpcProvider(
-        "https://eth-goerli.g.alchemy.com/v2/L8dQ1bw-HR1holdrgdul1NE1OQ2K8raS"
-      );
+      if (currentNetwork.chain === 5) {
+        provider = new ethers.providers.JsonRpcProvider(
+          `https://eth-goerli.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`
+        );
+      } else if (currentNetwork.chain === 1) {
+        provider = new ethers.providers.JsonRpcProvider(
+          `https://eth-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`
+        );
+      } else if (currentNetwork.chain === 80001) {
+        provider = new ethers.providers.JsonRpcProvider(
+          `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`
+        );
+      } else if (currentNetwork.chain === 137) {
+        provider = new ethers.providers.JsonRpcProvider(
+          `https://polygon-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`
+        );
+      } else if (currentNetwork.chain === 10) {
+        provider = new ethers.providers.JsonRpcProvider(
+          `https://opt-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMYKEY}`
+        );
+      }
+
       const pvtKey = props.data;
       const wallet = new ethers.Wallet(pvtKey, provider);
       // console.log(pvtKey);
@@ -17,7 +39,7 @@ const UserState = (props) => {
       setSignerAddr(wallet.address);
     };
     getCall();
-  }, [props.data]);
+  }, [props.data, currentNetwork]);
 
   return (
     <>
