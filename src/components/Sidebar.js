@@ -76,15 +76,17 @@ const Sidebar = ({ active, setActive, menuRef }) => {
     <>
       <div
         ref={menuRef}
-        className={`fixed h-full bg-dark-600  max-w-[300px] w-full ${
-          active ? "left-0" : "-left-full "
-        } top-0 left-0 rounded-r-3xl transition-all duration-300 "`}
+        className={`fixed h-full bg-dark-600 max-w-[300px] w-full ${active ? "left-0" : "hidden"
+          } top-0 left-0 rounded-r-3xl transition-all duration-300 "`}
         style={{ zIndex: 100 }}
       >
         <div className="flex justify-end items-center p-8 text-2xl">
           <button
             className="text-primary"
-            onClick={() => setActive((prev) => !prev)}
+            onClick={() => {
+              setActive((prev) => !prev) 
+              console.log(active);
+            }}
           >
             <FaTimes />{" "}
           </button>{" "}
@@ -119,7 +121,7 @@ const Sidebar = ({ active, setActive, menuRef }) => {
               className="grid grid-flow-col justify-start gap-2 items-center"
               onClick={val.handler}
             >
-              <span className="text-primary"> {val.icon} </span>{" "}
+              <span className="text-primary"> {val.icon}  </span>{" "}
               <p> {val.text} </p>{" "}
             </button>
           ))}{" "}

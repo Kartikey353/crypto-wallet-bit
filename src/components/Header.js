@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { walletActions } from "../store/wallet/wallet-slice";
+import AddNetworks from "./AddNetworks";
 const Header = () => {
   const dispatch = useDispatch();
   const { account, currentNetwork } = useSelector((state) => state.wallet);
@@ -14,6 +15,7 @@ const Header = () => {
   const menuRef = useRef(null);
   const headerRef = useRef(null);
   const [showmodal, setShowmodal] = useState(false);
+  const [addnetworkclick, setaddnetworkclick] = useState(false);
   useEffect(() => {
     const handler = (e) => {
       if (!menuRef.current.contains(e.target)) {
@@ -60,23 +62,30 @@ const Header = () => {
         </Link>
       </div>
       <div
-        className={`${
-          showmodal ? "block" : "hidden"
-        }  absolute top-[60px] shadow-2xl left-1/2 min-w-[300px] -translate-x-1/2  rounded-md bg-dark-400 z-50`}
+        className={`${showmodal ? "block" : "hidden"
+          }  absolute top-[60px] shadow-2xl left-1/2 min-w-[300px] -translate-x-1/2  rounded-md bg-dark-400 z-50`}
       >
         {NETWORKS.map((val, i) => (
           <button
             key={i}
-            className={`text-center block w-full px-2 py-3   uppercase ${
-              i !== NETWORKS.length - 1 && "border-b border-gray-400"
-            }`}
+            className={`text-center block w-full px-2 py-3   uppercase ${i !== NETWORKS.length - 1 && "border-b border-gray-400"
+              }`}
             onClick={() => setLocalNetwork(val)}
           >
             {val.text}
           </button>
         ))}
+        <button
+          onClick={() => {
+            setaddnetworkclick(true); 
+            setShowmodal(false);
+          }}
+          className="text-center block mb-3 w-full px-2 py-3 border-b border-gray-400 bg-blue-500 rounded-full mt-2">Add Network</button>
       </div>
-
+      <AddNetworks
+        value={addnetworkclick}
+        function={setaddnetworkclick}
+      />
       <Sidebar
         active={active}
         setActive={setActive}
